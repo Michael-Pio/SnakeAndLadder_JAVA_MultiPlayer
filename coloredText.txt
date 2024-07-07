@@ -1,0 +1,6 @@
+[31mThis is red text[0m
+[32mThis is green text[0m
+[33mThis is yellow text[0m
+[34mThis is blue text[0m
+[35mThis is magenta text[0m
+[36mThis is cyan text[0m
