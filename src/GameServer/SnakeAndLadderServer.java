@@ -1,12 +1,14 @@
+package GameServer;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import BroadcastServers.UDPServer;
 import Game.SnakeAndLadder;
 
-public class SnakeAndLadderServer {
+public class SnakeAndLadderServer implements Runnable{
     private static final int PORT = 12345;
-    private static final int TOTAL_PLAYERS = 2; // Set the total number of players
+    private static int TOTAL_PLAYERS = 2; // Set the total number of players
     private static final List<Handler> handlers = Collections.synchronizedList(new ArrayList<>());
     private static final Map<Integer, Integer> playerPositions = new HashMap<>();
     private static final SnakeAndLadder game = new SnakeAndLadder();
@@ -14,8 +16,21 @@ public class SnakeAndLadderServer {
     private static boolean gameOver = false;
     private static boolean gameStarted = false;
 
-    public static void main(String[] args) {
-        System.out.println("Server started...");
+    public void run() {
+        
+        //This Helps to discover the server from client side
+        Thread udpServerThreadThread = new Thread(new UDPServer());
+        udpServerThreadThread.start();
+        System.out.println("Broadcast started...");
+
+        @SuppressWarnings("resource")
+        Scanner scan = new Scanner(System.in);
+
+        System.out.println("Enter number of Players :");
+        TOTAL_PLAYERS = scan.nextInt();
+
+
+        //This starts the real server
         startServer();
     }
 

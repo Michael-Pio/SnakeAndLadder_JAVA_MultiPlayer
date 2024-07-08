@@ -1,10 +1,14 @@
+package BroadcastServers;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class UDPServer {
-    public static void main(String[] args) {
+public class UDPServer implements Runnable {
+
+    @Override
+    public void run() {
         try {
+            @SuppressWarnings("resource")
             DatagramSocket socket = new DatagramSocket(9876, InetAddress.getByName("0.0.0.0"));
             byte[] receiveData = new byte[1024];
             

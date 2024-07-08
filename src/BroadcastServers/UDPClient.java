@@ -1,12 +1,16 @@
+package BroadcastServers;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UDPClient {
-    public static void main(String[] args) {
+public class UDPClient implements Runnable{
+    public List<String>discoveredServers = new ArrayList<>();
+    @Override
+    public void run() {
         try {
+            @SuppressWarnings("resource")
             DatagramSocket socket = new DatagramSocket();
             socket.setBroadcast(true);
 
@@ -16,7 +20,7 @@ public class UDPClient {
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 9876);
             socket.send(sendPacket);
 
-            List<String> discoveredServers = new ArrayList<>();
+            discoveredServers = new ArrayList<>();
             byte[] receiveData = new byte[1024];
 
             socket.setSoTimeout(2000);  // Set a timeout of 2 seconds
