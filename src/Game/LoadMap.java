@@ -71,15 +71,12 @@ public class LoadMap {
 
 
                 line = line.replaceAll("/-/", ANSI_GREEN +"/-/"+ ANSI_RESET );
-
                 line = line.replaceAll("/-", ANSI_GREEN +"/-"+ ANSI_RESET );
                 line = line.replaceAll("-/", ANSI_GREEN +"-/"+ ANSI_RESET );
                 line = line.replaceAll("/", ANSI_GREEN +"/"+ ANSI_RESET );
 
-                // line = line.replaceAll("\\-\\", ANSI_GREEN +"\\-\\"+ ANSI_RESET );
-                // line = line.replaceAll("-\\", ANSI_GREEN +"-\\"+ ANSI_RESET );
-                // line = line.replaceAll("\\", ANSI_GREEN +"\\"+ ANSI_RESET );
-               // line = line.replaceAll("/-/", ANSI_GREEN +"/"+ ANSI_RESET );
+                line = line.replaceAll("\\\\\\-\\\\", ANSI_GREEN + "\\\\-\\\\" + ANSI_RESET);
+
 
                 line = line.replaceAll("<P1>", ANSI_YELLOW + BACKGROUND_CYAN + "<P1>" + ANSI_RESET);
                 // Replace P2 with blue text and yellow background

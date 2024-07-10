@@ -7,6 +7,7 @@ import BroadcastServers.UDPServer;
 import Game.SnakeAndLadder;
 
 public class SnakeAndLadderServer implements Runnable{
+    public static boolean isSetupCompleted = false;
     private static final int PORT = 12345;
     private static int TOTAL_PLAYERS = 2; // Set the total number of players
     private static final List<Handler> handlers = Collections.synchronizedList(new ArrayList<>());
@@ -16,19 +17,45 @@ public class SnakeAndLadderServer implements Runnable{
     private static boolean gameOver = false;
     private static boolean gameStarted = false;
 
-    public void run() {
-        
-        //This Helps to discover the server from client side
-        Thread udpServerThreadThread = new Thread(new UDPServer());
-        udpServerThreadThread.start();
-        System.out.println("Broadcast started...");
 
+    private static final String ANSI_RESET = "\u001B[0m";
+    // private static final String ANSI_BRIGHT_GREEN = "\u001B[92m";
+    private static final String ANSI_BRIGHT_YELLOW = "\u001B[93m";
+    // private static final String ANSI_RED = "\u001B[31m";
+    private static final String ANSI_BLUE = "\u001B[34m";
+
+    // ANSI escape codes for background colors
+    // private static final String ANSI_BG_DARK_GREEN = "\u001B[42m";
+    // private static final String ANSI_BG_DARK_BLUE = "\u001B[44m";
+    private static final String ANSI_BG_BLACK = "\u001B[40m";
+    private static final String ANSI_BG_BRIGHT_GREEN = "\u001B[102m";
+
+    public void run() {
         @SuppressWarnings("resource")
         Scanner scan = new Scanner(System.in);
 
-        System.out.println("Enter number of Players :");
-        TOTAL_PLAYERS = scan.nextInt();
+        // System.out.println("Creating New Game Session !");
+        System.out.println(ANSI_BG_BRIGHT_GREEN + ANSI_BLUE + "Creating New Game Session!" + ANSI_RESET);
+        System.out.print(ANSI_BG_BLACK + ANSI_BRIGHT_YELLOW + "Enter Session Name: " + ANSI_RESET);
+        String sessionName = scan.nextLine();
+        System.out.print(ANSI_BG_BLACK + ANSI_BRIGHT_YELLOW + "Enter number of Players: " + ANSI_RESET);
+        int TOTAL_PLAYERS = scan.nextInt();
+        System.out.println(ANSI_BG_BRIGHT_GREEN + ANSI_BLUE + "Session '" + sessionName + "' created with " + TOTAL_PLAYERS + " players!" + ANSI_RESET);
+       
 
+        // System.out.print("Enter Session Name : ");
+        // String sessionName = scan.nextLine();
+
+        // System.out.print("Enter number of Players :");
+        // TOTAL_PLAYERS = scan.nextInt();
+
+
+        //This Helps to discover the server from client side
+        Thread udpServerThreadThread = new Thread(new UDPServer(sessionName));
+        udpServerThreadThread.start();
+        System.out.println("[Server]Broadcast started...");
+
+        isSetupCompleted = true;
 
         //This starts the real server
         startServer();
@@ -36,7 +63,7 @@ public class SnakeAndLadderServer implements Runnable{
 
     private static void startServer() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Waiting for players...");
+            System.out.println("[Server]Waiting for players...");
             System.out.println(InetAddress.getLocalHost().toString() + ":" + PORT);
             int playerId = 1;
             while (true) {
@@ -61,7 +88,7 @@ public class SnakeAndLadderServer implements Runnable{
     private static void startGame() {
         synchronized (handlers) {
             for (Handler handler : handlers) {
-                handler.out.println("All players have joined. The game is starting!");
+                handler.out.println("[Server]All players have joined. The game is starting!");
             }
             gameStarted = true;
             handlers.notifyAll();
@@ -99,23 +126,26 @@ public class SnakeAndLadderServer implements Runnable{
                         if (gameOver) {
                             break;
                         }
-                        out.println("It's your turn. Type 'roll' to roll the dice.");
+                        out.println("\033[1;34m\n\n\nIt's your turn. Type 'roll' to roll the dice.\033[0m");
                         String command = in.readLine();
                         if (command != null && command.equals("roll")) {
                             int diceValue = game.rollDice();
                             int oldPosition = playerPositions.get(playerId);
                             int newPosition = game.movePlayer(playerPositions.get(playerId), diceValue);
                             playerPositions.put(playerId, newPosition);
-                            broadcast("Player " + playerId + " rolled a " + diceValue + " and moved to " + newPosition);
+
+                            broadcast("\033[1;32mPlayer " + playerId + " rolled a " + diceValue + " and moved to " + newPosition + "\033[0m");
                             broadcastBoard();
                             if(newPosition - oldPosition < 0){
-                                broadcast("Player " + playerId + " Got Bitten by a Snake!");
-                            }else if(newPosition - oldPosition > 6){
-                                broadcast("Player " + playerId + " Got Lucky by a Ladder!");
+                                broadcast("\033[1;31mPlayer " + playerId + " Got Bitten by a Snake!\033[0m");
+                            } else if(newPosition - oldPosition > 6){
+                                broadcast("\033[1;33mPlayer " + playerId + " Got Lucky by a Ladder!\033[0m");
                             }
 
                             if (game.isWin(newPosition)) {
-                                broadcast("Congratulations! Player " + playerId + " won!");
+                                out.println("\033[1;36mCongratulations you won the Game " + playerId + " won!\033[0m");
+                                broadcast("\033[1;36m Player " + playerId + " won!\033[0m");
+                                broadcast("Game Ended !");
                                 gameOver = true;
                                 handlers.notifyAll();
                             } else {
@@ -135,6 +165,7 @@ public class SnakeAndLadderServer implements Runnable{
                 }
             }
         }
+
 
         private void broadcast(String message) {
             synchronized (handlers) {

@@ -3,12 +3,26 @@ import java.util.Scanner;
 import GameServer.SnakeAndLadderClient;
 import GameServer.SnakeAndLadderServer;
 
+
+
 public class App {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BRIGHT_GREEN = "\u001B[92m";
+    public static final String ANSI_BRIGHT_YELLOW = "\u001B[93m";
+    public static final String ANSI_RED = "\u001B[31m";
+
+    // ANSI escape codes for background colors
+    public static final String ANSI_BG_DARK_GREEN = "\u001B[42m";
+    public static final String ANSI_BG_DARK_BLUE = "\u001B[44m";
+    public static final String ANSI_BG_BLACK = "\u001B[40m";
+
     public static void main(String[] args) throws Exception {
-        System.out.println("Welcome to Snakes and Ladders!");
-        System.out.println("Enter your choice:\n\t1.Create Session\n\t2.Join Session\n\t3.Exit\n======================================");
+        
+        drawMenu();
+
         @SuppressWarnings("resource")
         Scanner scan = new Scanner(System.in);
+
         int choice = scan.nextInt();
 
         Thread snakeAndLadderServerThread , snakeAndLadderClientThread;
@@ -17,23 +31,22 @@ public class App {
             case 1:
                 snakeAndLadderServerThread = new Thread(new SnakeAndLadderServer());
                 snakeAndLadderServerThread.start();
-                // snakeAndLadderServerThread.join();
-                Thread.sleep(10000);
                 
+                //waiting until the init of server completes
+                while(!SnakeAndLadderServer.isSetupCompleted)
+                    Thread.sleep(100);
+            
+                //instantiate listen server setup
                 snakeAndLadderClientThread = new Thread(new SnakeAndLadderClient(0));
                 snakeAndLadderClientThread.start();
                 snakeAndLadderClientThread.join();
-                
-
                 break;
+
             case 2:
                 snakeAndLadderClientThread = new Thread(new SnakeAndLadderClient(1));
                 snakeAndLadderClientThread.start();
                 snakeAndLadderClientThread.join();
-
                 Thread.sleep(1000);
-                
-                
                 break;
 
             case 3:
@@ -45,4 +58,19 @@ public class App {
         }
         
     }
+
+    public static void drawMenu(){
+
+        String border = ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "######################################" + ANSI_RESET;
+
+        System.out.println(border);
+        System.out.println(ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + "   " + ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "Welcome to Snakes and Ladders!   " + ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET);
+        System.out.println(border);
+        System.out.println(ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET + "  " + ANSI_RED + "Enter your choice:" + ANSI_RESET + "                " + ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET);
+        System.out.println(ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET + "  " + ANSI_BRIGHT_YELLOW + "\t1. Create Session" + ANSI_RESET + "            " + ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET);
+        System.out.println(ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET + "  " + ANSI_BRIGHT_YELLOW + "\t2. Join Session" + ANSI_RESET + "              " + ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET);
+        System.out.println(ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET + "  " + ANSI_BRIGHT_YELLOW + "\t3. Exit" + ANSI_RESET + "                      " + ANSI_BG_DARK_GREEN + ANSI_BRIGHT_GREEN + "#" + ANSI_RESET);
+        System.out.println(border);
+    }
 }
+//4693

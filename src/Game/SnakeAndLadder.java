@@ -1,5 +1,4 @@
 package Game;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -28,7 +27,7 @@ public class SnakeAndLadder {
         m1.file="Map\\map1.txt";
 
 
-        m2.snake.put(84, 73);
+        m2.snake.put(89, 73);
         m2.snake.put(84, 13);
         m2.snake.put(79, 40);
         m2.snake.put(69, 11);

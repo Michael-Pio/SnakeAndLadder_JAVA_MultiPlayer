@@ -37,7 +37,7 @@ public class SnakeAndLadderClient implements Runnable{
 
         int i =1;
         for (String serverIp : client.discoveredServers) {
-            System.out.println(i++ + " " + serverIp);
+            System.out.println(i++ + " "+client.discoveredSessions.get(i-2)+" " + serverIp );
         }
         if(mode == 1){
             choice = scan.nextInt();

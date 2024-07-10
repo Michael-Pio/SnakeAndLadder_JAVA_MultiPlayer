@@ -7,6 +7,8 @@ import java.util.List;
 
 public class UDPClient implements Runnable{
     public List<String>discoveredServers = new ArrayList<>();
+    public List<String>discoveredSessions = new ArrayList<>();
+    
     @Override
     public void run() {
         try {
@@ -21,6 +23,7 @@ public class UDPClient implements Runnable{
             socket.send(sendPacket);
 
             discoveredServers = new ArrayList<>();
+            discoveredSessions = new ArrayList<>();
             byte[] receiveData = new byte[1024];
 
             socket.setSoTimeout(2000);  // Set a timeout of 2 seconds
@@ -33,8 +36,10 @@ public class UDPClient implements Runnable{
                     String responseMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     if (responseMessage.startsWith("SERVER_RESPONSE: ")) {
                         String serverIP = responseMessage.split(" ")[1];
+                        String sessionName = responseMessage.split(" ")[3];
                         if (!discoveredServers.contains(serverIP)) {
                             discoveredServers.add(serverIP);
+                            discoveredSessions.add(sessionName);
                         }
                     }
                 } catch (Exception e) {
@@ -44,7 +49,7 @@ public class UDPClient implements Runnable{
             }
 
             System.out.println("Discovered servers: " + discoveredServers);
-
+            System.out.println("Discovered Game Session : " + discoveredSessions);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +58,6 @@ public class UDPClient implements Runnable{
     public static void main(String[] args) throws InterruptedException {
         Thread clienThread = new Thread(new UDPClient());
         clienThread.start();
-        
         clienThread.join();
     }
 }
