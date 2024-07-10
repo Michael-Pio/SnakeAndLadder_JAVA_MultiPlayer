@@ -49,5 +49,14 @@ public class UDPClient implements Runnable{
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread clienThread = new Thread(new UDPClient());
+        clienThread.start();
+        
+        clienThread.join();
+    }
 }
+
+
 

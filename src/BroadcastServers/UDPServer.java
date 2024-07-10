@@ -31,5 +31,12 @@ public class UDPServer implements Runnable {
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread clienThread = new Thread(new UDPServer());
+        clienThread.start();
+        
+        clienThread.join();
+    }
 }
 
