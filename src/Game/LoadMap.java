@@ -26,9 +26,12 @@ public class LoadMap {
     public static final String BACKGROUND_GREEN = "\u001B[42m";
     public static final String BACKGROUND_MAGENTA = "\u001B[45m";
 
+    public Board currentBoard;
 
 
-
+    public LoadMap(Board board){
+        this.currentBoard = board;
+    }
     public String ReadRawFromDisk(String filePath) {
         StringBuffer sb = new StringBuffer();
         try(BufferedReader br = new BufferedReader(new FileReader(filePath))){
@@ -42,6 +45,10 @@ public class LoadMap {
         }
 
         return sb.toString();
+    }
+
+    public String ReadRawFromDisk(){
+        return ReadRawFromDisk(currentBoard.file);
     }
 
 
@@ -62,6 +69,17 @@ public class LoadMap {
                 // Replace <H> with green color
                 line = line.replaceAll("<H>", ANSI_GREEN + "<H>" + ANSI_RESET);
 
+
+                line = line.replaceAll("/-/", ANSI_GREEN +"/-/"+ ANSI_RESET );
+
+                line = line.replaceAll("/-", ANSI_GREEN +"/-"+ ANSI_RESET );
+                line = line.replaceAll("-/", ANSI_GREEN +"-/"+ ANSI_RESET );
+                line = line.replaceAll("/", ANSI_GREEN +"/"+ ANSI_RESET );
+
+                // line = line.replaceAll("\\-\\", ANSI_GREEN +"\\-\\"+ ANSI_RESET );
+                // line = line.replaceAll("-\\", ANSI_GREEN +"-\\"+ ANSI_RESET );
+                // line = line.replaceAll("\\", ANSI_GREEN +"\\"+ ANSI_RESET );
+               // line = line.replaceAll("/-/", ANSI_GREEN +"/"+ ANSI_RESET );
 
                 line = line.replaceAll("<P1>", ANSI_YELLOW + BACKGROUND_CYAN + "<P1>" + ANSI_RESET);
                 // Replace P2 with blue text and yellow background
