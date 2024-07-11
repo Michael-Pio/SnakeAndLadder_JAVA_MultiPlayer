@@ -39,7 +39,7 @@ public class SnakeAndLadderServer implements Runnable{
         System.out.print(ANSI_BG_BLACK + ANSI_BRIGHT_YELLOW + "Enter Session Name: " + ANSI_RESET);
         String sessionName = scan.nextLine();
         System.out.print(ANSI_BG_BLACK + ANSI_BRIGHT_YELLOW + "Enter number of Players: " + ANSI_RESET);
-        int TOTAL_PLAYERS = scan.nextInt();
+        TOTAL_PLAYERS = scan.nextInt();
 
         System.out.print(ANSI_BG_BLACK + ANSI_BRIGHT_YELLOW + "Choose a Map: " + ANSI_RESET);
         int mapNumber = scan.nextInt();
