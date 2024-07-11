@@ -12,7 +12,7 @@ public class SnakeAndLadderServer implements Runnable{
     private static int TOTAL_PLAYERS = 2; // Set the total number of players
     private static final List<Handler> handlers = Collections.synchronizedList(new ArrayList<>());
     private static final Map<Integer, Integer> playerPositions = new HashMap<>();
-    private static final SnakeAndLadder game = new SnakeAndLadder();
+    private static SnakeAndLadder game;
     private static int currentPlayerId = 1;
     private static boolean gameOver = false;
     private static boolean gameStarted = false;
@@ -40,6 +40,11 @@ public class SnakeAndLadderServer implements Runnable{
         String sessionName = scan.nextLine();
         System.out.print(ANSI_BG_BLACK + ANSI_BRIGHT_YELLOW + "Enter number of Players: " + ANSI_RESET);
         int TOTAL_PLAYERS = scan.nextInt();
+
+        System.out.print(ANSI_BG_BLACK + ANSI_BRIGHT_YELLOW + "Choose a Map: " + ANSI_RESET);
+        int mapNumber = scan.nextInt();
+        game = new SnakeAndLadder(mapNumber);
+
         System.out.println(ANSI_BG_BRIGHT_GREEN + ANSI_BLUE + "Session '" + sessionName + "' created with " + TOTAL_PLAYERS + " players!" + ANSI_RESET);
        
 

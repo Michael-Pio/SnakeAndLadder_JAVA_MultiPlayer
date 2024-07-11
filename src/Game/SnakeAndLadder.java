@@ -12,7 +12,15 @@ public class SnakeAndLadder {
     static Board m1 = new Board();
     static Board m2 = new Board();
     
-    LoadMap mapManager = new LoadMap(m2);
+    LoadMap mapManager;
+
+    public SnakeAndLadder(int mapNumber){
+        if(mapNumber == 1){
+            mapManager = new LoadMap(m1);
+        }else{
+            mapManager = new LoadMap(m2);
+        }
+    }
 
     static {
         

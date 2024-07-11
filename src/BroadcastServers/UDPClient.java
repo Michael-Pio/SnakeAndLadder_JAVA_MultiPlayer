@@ -32,10 +32,12 @@ public class UDPClient implements Runnable{
                 try {
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                     socket.receive(receivePacket);
+                    System.out.println();
+
 
                     String responseMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
                     if (responseMessage.startsWith("SERVER_RESPONSE: ")) {
-                        String serverIP = responseMessage.split(" ")[1];
+                        String serverIP = receivePacket.getAddress().getHostName(); //responseMessage.split(" ")[1]
                         String sessionName = responseMessage.split(" ")[3];
                         if (!discoveredServers.contains(serverIP)) {
                             discoveredServers.add(serverIP);
